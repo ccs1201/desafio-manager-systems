@@ -1,4 +1,4 @@
-package com.ccs.api.model.input;
+package com.ccs.api.v1.model.input;
 
 import lombok.Getter;
 import lombok.Setter;

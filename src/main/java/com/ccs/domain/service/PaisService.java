@@ -51,4 +51,9 @@ public class PaisService {
         return repository.findById(id)
                 .orElseThrow(() -> new ServiceException(REGISTRO_NAO_LOCALIZADO));
     }
+
+    public void delete(Long id) {
+       var entity = this.findById(id);
+       repository.delete(entity);
+    }
 }

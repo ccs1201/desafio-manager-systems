@@ -1,4 +1,4 @@
-package com.ccs.api.v1.controller;
+package com.ccs.api.v2.controller;
 
 import com.ccs.api.v1.model.input.PaisInput;
 import com.ccs.api.v1.output.PaisOutput;
@@ -20,15 +20,17 @@ import java.util.concurrent.ForkJoinPool;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
+/**
+ * @see https://www.service-architecture.com/articles/web-services/representational-state-transfer-rest.html
+ */
 @RestController
-@RequestMapping("/api/v1/pais")
+@RequestMapping("/api/v2/pais")
 @RequiredArgsConstructor
-public class PaisController {
+public class PaisControllerV2 {
 
     private final PaisService service;
     private final PaisMapper mapper;
 
-    @GetMapping("/listar")
     @ResponseStatus(HttpStatus.OK)
     @Operation(description = "Retorna todo os Países com paginação")
     public CompletableFuture<Page<PaisOutput>> getAll(@PageableDefault(size = 10) Pageable pageable) {
@@ -37,7 +39,7 @@ public class PaisController {
                 .thenApply(mapper::toPage);
     }
 
-    @PostMapping("/salvar")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(description = "Cadastra um país")
     public CompletableFuture<PaisOutput> save(@Valid PaisInput input) {
