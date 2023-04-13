@@ -36,6 +36,15 @@ public class PaisControllerV2 {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @Operation(description = "Retorna todo os Países com paginação")
+    @Parameter(name = "pageable",example = """
+            {
+             "page": 0,
+             "size": 10,
+             "sort": [
+             "nome,DESC"
+              ]
+            }
+            """)
     public CompletableFuture<Page<PaisOutput>> getAll(@PageableDefault Pageable pageable) {
         return supplyAsync(() ->
                 service.getlAll(pageable), ForkJoinPool.commonPool())

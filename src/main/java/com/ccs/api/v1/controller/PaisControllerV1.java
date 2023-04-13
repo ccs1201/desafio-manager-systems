@@ -70,7 +70,16 @@ public class PaisControllerV1 {
     @ResponseStatus(HttpStatus.OK)
     @Operation(description = "Pesquisar países pelo nome")
     @Parameter(name = "nome", description = "Nome ou parte do nome do País", required = true)
-    public CompletableFuture<Page<PaisOutput>> pesquisar(@NotBlank(message = "informe o nome ou parte dele")
+    @Parameter(name = "pageable",example = """
+            {
+             "page": 0,
+             "size": 10,
+             "sort": [
+             "nome,DESC"
+              ]
+            }
+            """)
+    public CompletableFuture<Page<PaisOutput>> pesquisar(@NotBlank
                                                          @RequestParam String nome,
                                                          @PageableDefault Pageable pageable) {
         return supplyAsync(() ->
