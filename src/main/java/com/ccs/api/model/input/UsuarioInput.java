@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
-public class UsuarioImput {
+public class UsuarioInput {
     @NotBlank(message = "Login é obrigatório")
     private String login;
     @NotBlank(message = "Senha é obrigatório")

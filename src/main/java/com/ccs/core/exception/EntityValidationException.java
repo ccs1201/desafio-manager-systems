@@ -1,11 +1,10 @@
-package com.ccs.core.configuration.exception;
+package com.ccs.core.exception;
 
-import com.ccs.erp.core.exception.BusinessLogicException;
 import lombok.Getter;
 import org.springframework.validation.BindingResult;
 
 @Getter
-public class EntityValidationException extends BusinessLogicException {
+public class EntityValidationException extends ServiceException {
 
     private final BindingResult bindingResult;
 

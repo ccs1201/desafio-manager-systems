@@ -1,4 +1,4 @@
-package com.ccs.erp.core.configuration;
+package com.ccs.core.configuration;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -27,8 +27,8 @@ public class OpenApiConfig {
 
         return new OpenAPI()
                 .components(new Components())
-                .info(new Info().title("Desafio Técnico Senior Sistemas - ERP").description(
-                                "Esta é uma API REST assíncrona com implementação de Hyper Media(HATEOAS)")
+                .info(new Info().title("Desafio Técnico Manager Systems").description(
+                                "Esta é uma API REST assíncrona")
                         .contact(contato));
     }
 }

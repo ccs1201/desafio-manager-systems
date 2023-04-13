@@ -1,4 +1,4 @@
-package com.ccs.erp.core.utils.serializer;
+package com.ccs.core.utils.serializer;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

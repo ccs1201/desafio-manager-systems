@@ -1,4 +1,4 @@
-package com.ccs.erp.core.utils.mapper;
+package com.ccs.core.utils.mapper;
 
 import org.springframework.data.domain.Page;
 

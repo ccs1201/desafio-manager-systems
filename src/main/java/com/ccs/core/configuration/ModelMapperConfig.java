@@ -1,4 +1,4 @@
-package com.ccs.erp.core.configuration;
+package com.ccs.core.configuration;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

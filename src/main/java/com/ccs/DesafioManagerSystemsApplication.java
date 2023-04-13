@@ -1,4 +1,4 @@
-package com.ccs.api;
+package com.ccs;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

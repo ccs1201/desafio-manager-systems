@@ -1,4 +1,4 @@
-package com.ccs.erp.core.configuration.beanvalidation;
+package com.ccs.core.configuration;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;

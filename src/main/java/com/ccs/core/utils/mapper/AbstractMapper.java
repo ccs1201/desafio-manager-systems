@@ -1,12 +1,9 @@
-package com.ccs.erp.core.utils.mapper;
+package com.ccs.core.utils.mapper;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.PagedModel;
-import org.springframework.hateoas.RepresentationModel;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
@@ -15,33 +12,26 @@ import java.util.stream.Collectors;
 /**
  * <p><b>Classe {@code abstract} que serve de base para os {@code Mappers} de Entidades do domínio.</b></p>
  *
- * @param <RESPONSEMODEL> Classe que representa um RESPONSE de uma Entidade de Domínio.
- * @param <INPUTMODEL>    Classe que representa um INPUT de uma Entidade de Domínio.
- * @param <ENTITY>        Classe que representa uma ENTIDADE de Domínio.
+ * @param <OUTPUTMODEL> Classe que representa um RESPONSE de uma Entidade de Domínio.
+ * @param <INPUTMODEL>  Classe que representa um INPUT de uma Entidade de Domínio.
+ * @param <ENTITY>      Classe que representa uma ENTIDADE de Domínio.
  * @author Cleber Souza
  * @version 1.0
  * @since 21/08/2022
  */
-public abstract class AbstractMapper<RESPONSEMODEL extends RepresentationModel<RESPONSEMODEL>, INPUTMODEL, ENTITY>
-        extends RepresentationModelAssemblerSupport<ENTITY, RESPONSEMODEL> implements MapperInterface<RESPONSEMODEL, INPUTMODEL, ENTITY> {
+public abstract class AbstractMapper<OUTPUTMODEL, INPUTMODEL, ENTITY> implements MapperInterface<OUTPUTMODEL, INPUTMODEL, ENTITY> {
 
     @Autowired
     protected ModelMapper mapper;
-    private final Class<RESPONSEMODEL> responseModelClass;
+    private final Class<OUTPUTMODEL> responseModelClass;
     private final Class<ENTITY> entityClass;
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    @Autowired
-    private PagedResourcesAssembler<ENTITY> pagedResourcesAssembler;
 
-    @SuppressWarnings("unchecked")
-    public AbstractMapper(Class<?> controllerClass, Class<RESPONSEMODEL> resourceType) {
-        super(controllerClass, resourceType);
+    public AbstractMapper() {
         ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
 
-        this.responseModelClass = (Class<RESPONSEMODEL>) type.getActualTypeArguments()[0];
+        this.responseModelClass = (Class<OUTPUTMODEL>) type.getActualTypeArguments()[0];
 
         this.entityClass = (Class<ENTITY>) type.getActualTypeArguments()[2];
-
     }
 
     /**
@@ -52,12 +42,12 @@ public abstract class AbstractMapper<RESPONSEMODEL extends RepresentationModel<R
      * @return {@code new RESPONSEMODEL}
      */
     @Override
-    public RESPONSEMODEL toModel(ENTITY entity) {
+    public OUTPUTMODEL toModel(ENTITY entity) {
 
         return mapper.map(entity, responseModelClass);
     }
 
-    public void copyProperties(ENTITY source, RESPONSEMODEL destination) {
+    public void copyProperties(ENTITY source, OUTPUTMODEL destination) {
 
         mapper.map(source, destination);
     }
@@ -101,12 +91,12 @@ public abstract class AbstractMapper<RESPONSEMODEL extends RepresentationModel<R
 
     /**
      * <p>Transforma um {@link Page <ENTITY>} em um
-     * {@link Page<RESPONSEMODEL>}</p>
+     * {@link Page< OUTPUTMODEL >}</p>
      *
      * @param page O {@link Page} contendo as entidades de domínio.
-     * @return Um {@link Page<RESPONSEMODEL>} contendo a entidades do domínio transformada em {@code RESPONSEMODEL}
+     * @return Um {@link Page< OUTPUTMODEL >} contendo a entidades do domínio transformada em {@code RESPONSEMODEL}
      */
-    public Page<RESPONSEMODEL> toPage(Page<ENTITY> page) {
+    public Page<OUTPUTMODEL> toPage(Page<ENTITY> page) {
 
         return page.map(this::toModel);
     }
@@ -118,7 +108,7 @@ public abstract class AbstractMapper<RESPONSEMODEL extends RepresentationModel<R
      * @param page Contendo as entidades do domínio.
      * @return Collection de {@code RESPONSEMODEL}
      */
-    public Collection<RESPONSEMODEL> toCollection(Page<ENTITY> page) {
+    public Collection<OUTPUTMODEL> toCollection(Page<ENTITY> page) {
 
         return this.toCollection(page.getContent());
 
@@ -131,18 +121,7 @@ public abstract class AbstractMapper<RESPONSEMODEL extends RepresentationModel<R
      * @param collection A coleção de Entidades do domínio
      * @return Collection<RESPONSEMODEL> Contendo as entidades convertidas em RESPONSEMODEL
      */
-    public Collection<RESPONSEMODEL> toCollection(Collection<ENTITY> collection) {
+    public Collection<OUTPUTMODEL> toCollection(Collection<ENTITY> collection) {
         return collection.stream().map(this::toModel).collect(Collectors.toList());
-    }
-
-    /**
-     * <p>Tranforma um {@link Page} em {@link PagedModel}</p>
-     *
-     * @param page Contendo as entidades de domínio.
-     * @return PagedModel com a representação HATEOAS do {@code page}
-     */
-
-    public PagedModel<RESPONSEMODEL> toPagedModel(Page<ENTITY> page) {
-        return pagedResourcesAssembler.toModel(page, this);
     }
 }
