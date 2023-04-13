@@ -1,6 +1,6 @@
 package com.ccs.core.repository;
 
-import com.ccs.domain.model.Pais;
+import com.ccs.domain.entity.Pais;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

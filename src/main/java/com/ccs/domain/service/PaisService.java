@@ -2,7 +2,7 @@ package com.ccs.domain.service;
 
 import com.ccs.core.exception.ApiServiceException;
 import com.ccs.core.repository.PaisRepository;
-import com.ccs.domain.model.Pais;
+import com.ccs.domain.entity.Pais;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;

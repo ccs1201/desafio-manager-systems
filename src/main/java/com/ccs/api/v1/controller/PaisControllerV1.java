@@ -1,7 +1,7 @@
 package com.ccs.api.v1.controller;
 
 import com.ccs.api.v1.model.input.PaisInput;
-import com.ccs.api.v1.output.PaisOutput;
+import com.ccs.api.v1.model.output.PaisOutput;
 import com.ccs.core.utils.mapper.PaisMapper;
 import com.ccs.domain.service.PaisService;
 import io.swagger.v3.oas.annotations.Operation;

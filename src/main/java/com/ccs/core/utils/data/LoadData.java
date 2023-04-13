@@ -1,7 +1,7 @@
 package com.ccs.core.utils.data;
 
 import com.ccs.core.repository.PaisRepository;
-import com.ccs.domain.model.Pais;
+import com.ccs.domain.entity.Pais;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
