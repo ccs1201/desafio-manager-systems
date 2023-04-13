@@ -21,7 +21,9 @@ import java.util.concurrent.ForkJoinPool;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 /**
- * @see https://www.service-architecture.com/articles/web-services/representational-state-transfer-rest.html
+ * Implementação da API utilizando os Métodos, Verbos e Response Status recomendados para HTTP
+ *
+ * @see <a href="https://www.service-architecture.com/articles/web-services/representational-state-transfer-rest.html">REST</a>}
  */
 @RestController
 @RequestMapping("/api/v2/pais")
@@ -31,6 +33,7 @@ public class PaisControllerV2 {
     private final PaisService service;
     private final PaisMapper mapper;
 
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @Operation(description = "Retorna todo os Países com paginação")
     public CompletableFuture<Page<PaisOutput>> getAll(@PageableDefault(size = 10) Pageable pageable) {

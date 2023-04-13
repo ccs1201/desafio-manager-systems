@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PaisRepository extends JpaRepository<Pais, Long> {
-    Page<Pais> findByNome(String nome, Pageable pageable);
+    Page<Pais> findByNomeContaining(String nome, Pageable pageable);
 }

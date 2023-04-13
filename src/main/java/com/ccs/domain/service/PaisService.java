@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PaisService {
 
+    private static final String REGISTRO_NAO_LOCALIZADO = "Nenhum registro localizado";
+    private static final String ERRO_SALVAR = "Erro ao salvar País";
+    private static final String LOGIN_JA_CADASTRADO = "País já cadastrado.";
     private final PaisRepository repository;
-    private final String REGISTRO_NAO_LOCALIZADO = "Nenhum registro localizado";
-    private final String ERRO_SALVAR = "Erro ao salvar País";
-    private final String LOGIN_JA_CADASTRADO = "Login já cadastrado.";
 
     public Pais save(Pais pais) {
         try {
@@ -34,12 +34,11 @@ public class PaisService {
         if (paises.isEmpty()) {
             throw new ServiceException(REGISTRO_NAO_LOCALIZADO);
         }
-
         return paises;
     }
 
     public Page<Pais> findByNome(String nome, Pageable pageable) {
-        var paises = repository.findByNome(nome, pageable);
+        var paises = repository.findByNomeContaining(nome, pageable);
 
         if (paises.isEmpty()) {
             throw new ServiceException(REGISTRO_NAO_LOCALIZADO);
@@ -53,7 +52,16 @@ public class PaisService {
     }
 
     public void delete(Long id) {
-       var entity = this.findById(id);
-       repository.delete(entity);
+        repository.delete(this.findById(id));
+    }
+
+    public boolean deleteGET(Long id) {
+        try {
+            var entity = this.findById(id);
+            repository.delete(entity);
+            return true;
+        } catch (ServiceException e) {
+            return false;
+        }
     }
 }
