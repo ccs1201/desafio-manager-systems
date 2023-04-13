@@ -33,13 +33,13 @@ public class PaisControllerV1 {
     @ResponseStatus(HttpStatus.OK)
     @Operation(description = "Retorna todo os Países com paginação")
     @Parameter(name = "pageable",example = """
-            {\n" 
-            "  \"page\": 0,\n" +
-            "  \"size\": 10,\n" +
-            "  \"sort\": [\n" +
-            "    \"nome,DESC\"\n" +
-            "  ]\n" +
-            "} 
+            {
+             "page": 0,
+             "size": 10,
+             "sort": [
+             "nome,DESC"
+              ]
+            }
             """)
     public CompletableFuture<Page<PaisOutput>> listar(@PageableDefault Pageable pageable) {
         return supplyAsync(() ->
