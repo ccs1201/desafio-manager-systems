@@ -21,7 +21,7 @@ public class LoadData {
     private void load() {
         var br = Pais.builder()
                 .gentilico("Brasileiro")
-                .nome("brasil")
+                .nome("Brasil")
                 .sigla("BR").build();
         repository.save(br);
 

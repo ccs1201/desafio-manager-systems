@@ -1,6 +1,6 @@
 package com.ccs.domain.service;
 
-import com.ccs.core.exception.ServiceException;
+import com.ccs.core.exception.ApiServiceException;
 import com.ccs.core.repository.PaisRepository;
 import com.ccs.domain.model.Pais;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +22,9 @@ public class PaisService {
         try {
             return repository.save(pais);
         } catch (IllegalArgumentException e) {
-            throw new ServiceException(ERRO_SALVAR, e);
+            throw new ApiServiceException(ERRO_SALVAR, e);
         } catch (DataIntegrityViolationException e) {
-            throw new ServiceException(LOGIN_JA_CADASTRADO);
+            throw new ApiServiceException(LOGIN_JA_CADASTRADO);
         }
     }
 
@@ -32,7 +32,7 @@ public class PaisService {
         var paises = repository.findAll(pageable);
 
         if (paises.isEmpty()) {
-            throw new ServiceException(REGISTRO_NAO_LOCALIZADO);
+            throw new ApiServiceException(REGISTRO_NAO_LOCALIZADO);
         }
         return paises;
     }
@@ -41,14 +41,14 @@ public class PaisService {
         var paises = repository.findByNomeContaining(nome, pageable);
 
         if (paises.isEmpty()) {
-            throw new ServiceException(REGISTRO_NAO_LOCALIZADO);
+            throw new ApiServiceException(REGISTRO_NAO_LOCALIZADO);
         }
         return paises;
     }
 
     public Pais findById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ServiceException(REGISTRO_NAO_LOCALIZADO));
+                .orElseThrow(() -> new ApiServiceException(REGISTRO_NAO_LOCALIZADO));
     }
 
     public void delete(Long id) {
@@ -60,7 +60,7 @@ public class PaisService {
             var entity = this.findById(id);
             repository.delete(entity);
             return true;
-        } catch (ServiceException e) {
+        } catch (ApiServiceException e) {
             return false;
         }
     }
