@@ -54,7 +54,7 @@ public class UsuarioService {
         var token = tokenService.findByLogin(login);
 
         if (this.valiadarSenha(usuario, senha)) {
-            tokenService.renovarTicket(token.getToken());
+            tokenService.calcularExpiracao(token);
             return this.buildUsuarioAutenticado(usuario, token);
         } else {
             throw new ApiAutenticationException(LOGIN_SENHA_INVALIDO);

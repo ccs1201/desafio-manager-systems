@@ -2,8 +2,10 @@ package com.ccs.api.v1.controller;
 
 import com.ccs.api.v1.model.input.PaisInput;
 import com.ccs.api.v1.model.output.PaisOutput;
+import com.ccs.core.exception.ApiAutenticationException;
 import com.ccs.core.utils.mapper.PaisMapper;
 import com.ccs.domain.service.PaisService;
+import com.ccs.domain.service.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -28,8 +30,10 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 @RequiredArgsConstructor
 public class PaisControllerV1 {
 
+    private static final String FUNCAO_SOMENTE_ADMINISTRADOR = "Somente administradores podem realizar esta operação";
     private final PaisService service;
     private final PaisMapper mapper;
+    private final TokenService tokenService;
 
     @GetMapping("/listar")
     @ResponseStatus(HttpStatus.OK)
@@ -57,8 +61,16 @@ public class PaisControllerV1 {
     @Operation(description = "Cadastra um país")
     @Parameter(name = "api-key", description = "Token de autenticação")
     public CompletableFuture<PaisOutput> salvar(@RequestBody @Valid PaisInput input, @RequestHeader(value = "api-key") String apiKey) {
-        return supplyAsync(() ->
-                service.save(mapper.toEntity(input)), ForkJoinPool.commonPool())
+
+        return supplyAsync(() -> {
+                    var token = tokenService.findByApiKey(apiKey);
+
+                    if (token.getAdministrador()) {
+                        return service.save(mapper.toEntity(input));
+                    }
+                    throw new ApiAutenticationException(FUNCAO_SOMENTE_ADMINISTRADOR);
+                },
+                ForkJoinPool.commonPool())
                 .thenApply(mapper::toModel);
     }
 
