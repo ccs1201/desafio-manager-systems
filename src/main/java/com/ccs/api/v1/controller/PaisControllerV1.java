@@ -5,7 +5,6 @@ import com.ccs.api.v1.model.output.PaisOutput;
 import com.ccs.core.utils.PermissaoAcessoUtils;
 import com.ccs.core.utils.mapper.PaisMapper;
 import com.ccs.domain.service.PaisService;
-import com.ccs.domain.service.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -33,7 +32,7 @@ public class PaisControllerV1 {
 
     private final PaisService service;
     private final PaisMapper mapper;
-    private final TokenService tokenService;
+
     private final PermissaoAcessoUtils acessoUtils;
 
     @GetMapping("/listar")
