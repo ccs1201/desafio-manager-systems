@@ -1,5 +1,6 @@
 package com.ccs.domain.service;
 
+import com.ccs.core.configuration.TokenDurationProperties;
 import com.ccs.core.repository.TokenRepository;
 import com.ccs.domain.entity.Token;
 import com.ccs.domain.entity.Usuario;
@@ -14,21 +15,19 @@ import java.util.UUID;
 public class TokenService {
 
     private final TokenRepository repository;
-    private final int MINUTOS_ACRESCIMO = 5;
+    private final TokenDurationProperties tokenDurationProperties;
 
     public Boolean renovarTicket(String token) {
         var tokenEntity = repository.findByToken(token);
 
-        if (tokenEntity.isEmpty()) {
-            return false;
-        }
+        tokenEntity
+                .filter(Token::getAdministrador)
+                .ifPresent(t -> {
+                    t.setExpiracao(LocalDateTime.now().plusMinutes(tokenDurationProperties.getToken_duration()));
+                    repository.save(t);
+                });
 
-        if (tokenEntity.get().getAdministrador()) {
-            tokenEntity.get().setExpiracao(tokenEntity.get().getExpiracao().plusMinutes(MINUTOS_ACRESCIMO));
-            repository.save(tokenEntity.get());
-            return true;
-        }
-        return false;
+        return tokenEntity.isPresent();
     }
 
     public void save(Token token) {
@@ -37,7 +36,7 @@ public class TokenService {
 
     public void gerarToken(Usuario usuario) {
         var token = Token.builder()
-                .expiracao(LocalDateTime.now().plusMinutes(MINUTOS_ACRESCIMO))
+                .expiracao(LocalDateTime.now().plusMinutes(tokenDurationProperties.getToken_duration()))
                 .token(UUID.randomUUID().toString())
                 .administrador(usuario.getAdministrador())
                 .login(usuario.getLogin())

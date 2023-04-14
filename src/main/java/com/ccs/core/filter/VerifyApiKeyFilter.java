@@ -35,15 +35,27 @@ public class VerifyApiKeyFilter extends GenericFilterBean {
         if (!isBlank(apiKey) && isValidApiKey(apiKey)) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
-           sendUnauthorizedError(httpResponse, apiKey);
+            sendUnauthorizedError(httpResponse, apiKey);
         }
     }
 
     private boolean isValidApiKey(String apiKey) {
-        return repository
+
+//        var token = repository.findByToken(apiKey);
+//
+//        if (token.isPresent()) {
+//            if (token.get().getExpiracao().isAfter(LocalDateTime.now())) {
+//                return true;
+//            }
+//        }
+//        return false;
+
+        var result =  repository
                 .findByToken(apiKey)
                 .filter(t -> t.getExpiracao().isAfter(LocalDateTime.now()))
                 .isPresent();
+
+        return result;
     }
 
     private void sendUnauthorizedError(HttpServletResponse response, String apiKey) throws IOException {
