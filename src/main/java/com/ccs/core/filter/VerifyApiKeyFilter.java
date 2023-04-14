@@ -1,6 +1,5 @@
 package com.ccs.core.filter;
 
-import com.ccs.core.exception.ApiAutenticationException;
 import com.ccs.core.repository.TokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,14 +30,12 @@ public class VerifyApiKeyFilter extends GenericFilterBean {
         var httpRequest = (HttpServletRequest) servletRequest;
         var httpResponse = (HttpServletResponse) servletResponse;
 
-        System.out.println(">>>>>>>>>>>>>>>> AuthType -> " + httpRequest.getAuthType());
-
         var apiKey = httpRequest.getHeader(HEADER_API_KEY);
 
         if (!isBlank(apiKey) && isValidApiKey(apiKey)) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
-           throw new ApiAutenticationException("Token inválido ou ausente.");
+           sendUnauthorizedError(httpResponse, apiKey);
         }
     }
 
@@ -47,12 +44,6 @@ public class VerifyApiKeyFilter extends GenericFilterBean {
                 .findByToken(apiKey)
                 .filter(t -> t.getExpiracao().isAfter(LocalDateTime.now()))
                 .isPresent();
-
-//        if (token.isEmpty()) {
-//            return false;
-//        }
-//
-//        return token.get().getExpiracao().isAfter(LocalDateTime.now());
     }
 
     private void sendUnauthorizedError(HttpServletResponse response, String apiKey) throws IOException {

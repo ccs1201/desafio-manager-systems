@@ -76,11 +76,11 @@
             <artifactId>springdoc-openapi-webmvc-core</artifactId>
             <version>${org-springdoc.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-security</artifactId>
-            <version>${org-springdoc.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springdoc</groupId>-->
+<!--            <artifactId>springdoc-openapi-security</artifactId>-->
+<!--            <version>${org-springdoc.version}</version>-->
+<!--        </dependency>-->
 
         <!-- Spring Security -->
         <dependency>

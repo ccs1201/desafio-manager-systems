@@ -148,7 +148,7 @@ public class ApiExceptionHandler extends BaseExceptionHandler {
 
     @ExceptionHandler(ApiAutenticationException.class)
     public ResponseEntity<?> apiAutenticationExceptionHandler(ApiAutenticationException e) {
-        return buildResponseEntity(HttpStatus.UNAUTHORIZED, e);
+        return buildResponseEntity(HttpStatus.UNAUTHORIZED, e, "Falha na Autenticação");
     }
 
     @ExceptionHandler(ServiceException.class)
