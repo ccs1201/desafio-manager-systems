@@ -45,7 +45,7 @@ public class PaisControllerV2 {
               ]
             }
             """)
-    public CompletableFuture<Page<PaisOutput>> getAll(@PageableDefault Pageable pageable) {
+    public CompletableFuture<Page<PaisOutput>> getAll(@PageableDefault Pageable pageable, @RequestHeader(value = "api-key") String apiKey) {
         return supplyAsync(() ->
                 service.getlAll(pageable), ForkJoinPool.commonPool())
                 .thenApply(mapper::toPage);

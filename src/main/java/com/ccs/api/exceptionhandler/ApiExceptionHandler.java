@@ -2,6 +2,7 @@ package com.ccs.api.exceptionhandler;
 
 import com.ccs.api.exceptionhandler.model.ApiValidationErrorResponse;
 import com.ccs.api.exceptionhandler.model.FieldValidationError;
+import com.ccs.core.exception.ApiAutenticationException;
 import com.ccs.core.exception.ApiServiceException;
 import com.ccs.core.exception.EntityValidationExceptionApi;
 import com.ccs.core.exception.FieldValidationException;
@@ -45,7 +46,7 @@ import java.util.stream.Collectors;
  * Exceptions da API para o consumidor</p>
  *
  * @author Cleber Souza
- * @version 1.0
+ * @version 1.0.1
  * @since 22/08/2022
  */
 
@@ -141,8 +142,13 @@ public class ApiExceptionHandler extends BaseExceptionHandler {
     }
 
     @ExceptionHandler(ApiServiceException.class)
-    public ResponseEntity<?> businessLogicExceptionHandler(ApiServiceException e) {
+    public ResponseEntity<?> apiServiceExceptionHandler(ApiServiceException e) {
         return buildResponseEntity(HttpStatus.BAD_REQUEST, e, INVALID_FIELD_VALUES);
+    }
+
+    @ExceptionHandler(ApiAutenticationException.class)
+    public ResponseEntity<?> apiAutenticationExceptionHandler(ApiAutenticationException e) {
+        return buildResponseEntity(HttpStatus.UNAUTHORIZED, e);
     }
 
     @ExceptionHandler(ServiceException.class)
@@ -349,7 +355,6 @@ public class ApiExceptionHandler extends BaseExceptionHandler {
                 .build();
 
         getBindingResults(e.getBindingResult().getAllErrors(), apiValidationErrorResponse);
-
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiValidationErrorResponse);
     }

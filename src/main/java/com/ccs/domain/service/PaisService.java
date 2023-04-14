@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,16 +16,17 @@ public class PaisService {
 
     private static final String REGISTRO_NAO_LOCALIZADO = "Nenhum registro localizado";
     private static final String ERRO_SALVAR = "Erro ao salvar País";
-    private static final String LOGIN_JA_CADASTRADO = "País já cadastrado.";
+    private static final String JA_CADASTRADO = "País já cadastrado.";
     private final PaisRepository repository;
 
+    @Transactional
     public Pais save(Pais pais) {
         try {
             return repository.save(pais);
         } catch (IllegalArgumentException e) {
             throw new ApiServiceException(ERRO_SALVAR, e);
         } catch (DataIntegrityViolationException e) {
-            throw new ApiServiceException(LOGIN_JA_CADASTRADO);
+            throw new ApiServiceException(JA_CADASTRADO);
         }
     }
 
@@ -51,10 +53,12 @@ public class PaisService {
                 .orElseThrow(() -> new ApiServiceException(REGISTRO_NAO_LOCALIZADO));
     }
 
+    @Transactional
     public void delete(Long id) {
         repository.delete(this.findById(id));
     }
 
+    @Transactional
     public boolean deleteGET(Long id) {
         try {
             var entity = this.findById(id);

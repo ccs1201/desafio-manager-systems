@@ -6,11 +6,13 @@ import com.ccs.core.utils.mapper.PaisMapper;
 import com.ccs.domain.service.PaisService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,7 +24,7 @@ import java.util.concurrent.ForkJoinPool;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 @RestController
-@RequestMapping("/api/v1/pais")
+@RequestMapping(value = "/api/v1/pais", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class PaisControllerV1 {
 
@@ -32,7 +34,7 @@ public class PaisControllerV1 {
     @GetMapping("/listar")
     @ResponseStatus(HttpStatus.OK)
     @Operation(description = "Retorna todo os Países com paginação")
-    @Parameter(name = "pageable",example = """
+    @Parameters({@Parameter(name = "pageable", example = """
             {
              "page": 0,
              "size": 10,
@@ -40,8 +42,11 @@ public class PaisControllerV1 {
              "nome,DESC"
               ]
             }
-            """)
-    public CompletableFuture<Page<PaisOutput>> listar(@PageableDefault Pageable pageable) {
+            """),
+            @Parameter(name = "api-key", description = "Token de autenticação")})
+    public CompletableFuture<Page<PaisOutput>> listar(@PageableDefault Pageable pageable,
+                                                      @RequestHeader(value = "api-key") String apiKey) {
+        System.out.println("##################### Key-> " + apiKey);
         return supplyAsync(() ->
                 service.getlAll(pageable), ForkJoinPool.commonPool())
                 .thenApply(mapper::toPage);
@@ -70,7 +75,7 @@ public class PaisControllerV1 {
     @ResponseStatus(HttpStatus.OK)
     @Operation(description = "Pesquisar países pelo nome")
     @Parameter(name = "nome", description = "Nome ou parte do nome do País", required = true)
-    @Parameter(name = "pageable",example = """
+    @Parameter(name = "pageable", example = """
             {
              "page": 0,
              "size": 10,
