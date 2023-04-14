@@ -50,12 +50,10 @@ public class VerifyApiKeyFilter extends GenericFilterBean {
 //        }
 //        return false;
 
-        var result =  repository
+        return repository
                 .findByToken(apiKey)
                 .filter(t -> t.getExpiracao().isAfter(LocalDateTime.now()))
                 .isPresent();
-
-        return result;
     }
 
     private void sendUnauthorizedError(HttpServletResponse response, String apiKey) throws IOException {
