@@ -2,6 +2,7 @@ package com.ccs.api.v2.controller;
 
 import com.ccs.api.v1.model.input.PaisInput;
 import com.ccs.api.v1.model.output.PaisOutput;
+import com.ccs.core.utils.PermissaoAcessoUtils;
 import com.ccs.core.utils.mapper.PaisMapper;
 import com.ccs.domain.service.PaisService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,6 +33,7 @@ public class PaisControllerV2 {
 
     private final PaisService service;
     private final PaisMapper mapper;
+    private final PermissaoAcessoUtils acessoUtils;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -59,8 +61,10 @@ public class PaisControllerV2 {
     @Operation(description = "Cadastra um país")
     @Parameter(name = "api-key", description = "Token de autenticação")
     public CompletableFuture<PaisOutput> salvar(@RequestBody @Valid PaisInput input, @RequestHeader(value = "api-key") String apiKey) {
-        return supplyAsync(() ->
-                service.save(mapper.toEntity(input)), ForkJoinPool.commonPool())
+        return supplyAsync(() -> {
+            acessoUtils.validarPapelAdministrador(apiKey);
+            return service.save(mapper.toEntity(input));
+        }, ForkJoinPool.commonPool())
                 .thenApply(mapper::toModel);
     }
 
@@ -75,7 +79,7 @@ public class PaisControllerV2 {
                                                 @RequestHeader(value = "api-key") String apiKey) {
 
         return supplyAsync(() -> {
-
+            acessoUtils.validarPapelAdministrador(apiKey);
             var pais = service.findById(id);
             mapper.updateEntity(input, pais);
             return service.save(pais);
@@ -92,8 +96,10 @@ public class PaisControllerV2 {
             @Parameter(name = "api-key", description = "Token de autenticação")
     })
     public void delete(@PathVariable Long id, @RequestHeader(value = "api-key") String apiKey) {
-        CompletableFuture.runAsync(() ->
-                service.delete(id), ForkJoinPool.commonPool()
+        CompletableFuture.runAsync(() -> {
+                    acessoUtils.validarPapelAdministrador(apiKey);
+                    service.delete(id);
+                }, ForkJoinPool.commonPool()
         );
     }
 }

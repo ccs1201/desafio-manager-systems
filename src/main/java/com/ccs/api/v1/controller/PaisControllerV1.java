@@ -2,7 +2,7 @@ package com.ccs.api.v1.controller;
 
 import com.ccs.api.v1.model.input.PaisInput;
 import com.ccs.api.v1.model.output.PaisOutput;
-import com.ccs.core.exception.ApiAutenticationException;
+import com.ccs.core.utils.PermissaoAcessoUtils;
 import com.ccs.core.utils.mapper.PaisMapper;
 import com.ccs.domain.service.PaisService;
 import com.ccs.domain.service.TokenService;
@@ -30,10 +30,11 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 @RequiredArgsConstructor
 public class PaisControllerV1 {
 
-    private static final String FUNCAO_SOMENTE_ADMINISTRADOR = "Somente administradores podem realizar esta operação";
+
     private final PaisService service;
     private final PaisMapper mapper;
     private final TokenService tokenService;
+    private final PermissaoAcessoUtils acessoUtils;
 
     @GetMapping("/listar")
     @ResponseStatus(HttpStatus.OK)
@@ -63,12 +64,8 @@ public class PaisControllerV1 {
     public CompletableFuture<PaisOutput> salvar(@RequestBody @Valid PaisInput input, @RequestHeader(value = "api-key") String apiKey) {
 
         return supplyAsync(() -> {
-                    var token = tokenService.findByApiKey(apiKey);
-
-                    if (token.getAdministrador()) {
-                        return service.save(mapper.toEntity(input));
-                    }
-                    throw new ApiAutenticationException(FUNCAO_SOMENTE_ADMINISTRADOR);
+                    acessoUtils.validarPapelAdministrador(apiKey);
+                    return service.save(mapper.toEntity(input));
                 },
                 ForkJoinPool.commonPool())
                 .thenApply(mapper::toModel);
@@ -81,9 +78,11 @@ public class PaisControllerV1 {
             @Parameter(name = "id", description = "ID do País que será removido", required = true),
             @Parameter(name = "api-key", description = "Token de autenticação")})
     public CompletableFuture<Boolean> excluir(@PathVariable @NotNull Long id, @RequestHeader(value = "api-key") String apiKey) {
-        return supplyAsync(() ->
-                service.deleteGET(id), ForkJoinPool.commonPool()
-        );
+        return supplyAsync(() -> {
+                    acessoUtils.validarPapelAdministrador(apiKey);
+                    return service.deleteGET(id);
+                },
+                ForkJoinPool.commonPool());
     }
 
     @GetMapping("/pesquisar")
