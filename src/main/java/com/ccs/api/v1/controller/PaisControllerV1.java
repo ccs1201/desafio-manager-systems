@@ -46,7 +46,7 @@ public class PaisControllerV1 {
             @Parameter(name = "api-key", description = "Token de autenticação")})
     public CompletableFuture<Page<PaisOutput>> listar(@PageableDefault Pageable pageable,
                                                       @RequestHeader(value = "api-key") String apiKey) {
-        System.out.println("##################### Key-> " + apiKey);
+
         return supplyAsync(() ->
                 service.getlAll(pageable), ForkJoinPool.commonPool())
                 .thenApply(mapper::toPage);
@@ -55,7 +55,8 @@ public class PaisControllerV1 {
     @PostMapping("/salvar")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(description = "Cadastra um país")
-    public CompletableFuture<PaisOutput> salvar(@RequestBody @Valid PaisInput input) {
+    @Parameter(name = "api-key", description = "Token de autenticação")
+    public CompletableFuture<PaisOutput> salvar(@RequestBody @Valid PaisInput input, @RequestHeader(value = "api-key") String apiKey) {
         return supplyAsync(() ->
                 service.save(mapper.toEntity(input)), ForkJoinPool.commonPool())
                 .thenApply(mapper::toModel);
@@ -64,8 +65,10 @@ public class PaisControllerV1 {
     @GetMapping("/excluir/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(description = "Remove um País pelo id")
-    @Parameter(name = "id", description = "ID do País que será removido", required = true)
-    public CompletableFuture<Boolean> excluir(@PathVariable @NotNull Long id) {
+    @Parameters({
+            @Parameter(name = "id", description = "ID do País que será removido", required = true),
+            @Parameter(name = "api-key", description = "Token de autenticação")})
+    public CompletableFuture<Boolean> excluir(@PathVariable @NotNull Long id, @RequestHeader(value = "api-key") String apiKey) {
         return supplyAsync(() ->
                 service.deleteGET(id), ForkJoinPool.commonPool()
         );
@@ -74,19 +77,23 @@ public class PaisControllerV1 {
     @GetMapping("/pesquisar")
     @ResponseStatus(HttpStatus.OK)
     @Operation(description = "Pesquisar países pelo nome")
-    @Parameter(name = "nome", description = "Nome ou parte do nome do País", required = true)
-    @Parameter(name = "pageable", example = """
-            {
-             "page": 0,
-             "size": 10,
-             "sort": [
-             "nome,DESC"
-              ]
-            }
-            """)
+    @Parameters({
+            @Parameter(name = "nome", description = "Nome ou parte do nome do País", required = true),
+            @Parameter(name = "pageable", example = """
+                    {
+                     "page": 0,
+                     "size": 10,
+                     "sort": [
+                     "nome,DESC"
+                      ]
+                    }
+                    """),
+            @Parameter(name = "api-key", description = "Token de autenticação")
+    })
     public CompletableFuture<Page<PaisOutput>> pesquisar(@NotBlank
                                                          @RequestParam String nome,
-                                                         @PageableDefault Pageable pageable) {
+                                                         @PageableDefault Pageable pageable,
+                                                         @RequestHeader(value = "api-key") String apiKey) {
         return supplyAsync(() ->
                 service.findByNome(nome, pageable)
         ).thenApply(mapper::toPage);

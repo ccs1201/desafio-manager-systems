@@ -62,7 +62,9 @@ public class UsuarioService {
     }
 
     private UsuarioAutenticado buildUsuarioAutenticado(Usuario usuario, Token token) {
-        return new UsuarioAutenticado(usuario, token);
+        var usuarioAutenticado = new UsuarioAutenticado(usuario, token);
+        usuarioAutenticado.setAutenticado(true);
+        return usuarioAutenticado;
     }
 
     private Usuario findBylogin(String login) {

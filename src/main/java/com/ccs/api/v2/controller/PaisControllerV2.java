@@ -36,25 +36,29 @@ public class PaisControllerV2 {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @Operation(description = "Retorna todo os Países com paginação")
-    @Parameter(name = "pageable",example = """
-            {
-             "page": 0,
-             "size": 10,
-             "sort": [
-             "nome,DESC"
-              ]
-            }
-            """)
-    public CompletableFuture<Page<PaisOutput>> getAll(@PageableDefault Pageable pageable, @RequestHeader(value = "api-key") String apiKey) {
+    @Parameters({
+            @Parameter(name = "pageable", example = """
+                    {
+                     "page": 0,
+                     "size": 10,
+                     "sort": [
+                     "nome,DESC"
+                      ]
+                    }
+                    """),
+            @Parameter(name = "api-key", description = "Token de autenticação")})
+    public CompletableFuture<Page<PaisOutput>> getAll(@PageableDefault Pageable pageable,
+                                                      @RequestHeader(value = "api-key") String apiKey) {
         return supplyAsync(() ->
                 service.getlAll(pageable), ForkJoinPool.commonPool())
                 .thenApply(mapper::toPage);
     }
 
-    @PostMapping
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(description = "Cadastra um país")
-    public CompletableFuture<PaisOutput> save(@Valid PaisInput input) {
+    @Parameter(name = "api-key", description = "Token de autenticação")
+    public CompletableFuture<PaisOutput> salvar(@RequestBody @Valid PaisInput input, @RequestHeader(value = "api-key") String apiKey) {
         return supplyAsync(() ->
                 service.save(mapper.toEntity(input)), ForkJoinPool.commonPool())
                 .thenApply(mapper::toModel);
@@ -63,15 +67,19 @@ public class PaisControllerV2 {
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(description = "Atualiza um País")
-    @Parameters(
-            @Parameter(name = "id", description = "ID do País que será atualizado", required = true)
-    )
-    public CompletableFuture<PaisOutput> update(@PathVariable Long id, @Valid PaisInput input) {
+    @Parameters({
+            @Parameter(name = "id", description = "ID do País que será atualizado", required = true),
+            @Parameter(name = "api-key", description = "Token de autenticação")
+    })
+    public CompletableFuture<PaisOutput> update(@PathVariable Long id, @Valid PaisInput input,
+                                                @RequestHeader(value = "api-key") String apiKey) {
 
         return supplyAsync(() -> {
+
             var pais = service.findById(id);
             mapper.updateEntity(input, pais);
             return service.save(pais);
+
         }, ForkJoinPool.commonPool())
                 .thenApply(mapper::toModel);
     }
@@ -79,10 +87,13 @@ public class PaisControllerV2 {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(description = "Remove um País pelo id")
-    @Parameter(name = "id", description = "ID do País que será removido")
-    public void delete(@PathVariable Long id){
+    @Parameters({
+            @Parameter(name = "id", description = "ID do País que será removido"),
+            @Parameter(name = "api-key", description = "Token de autenticação")
+    })
+    public void delete(@PathVariable Long id, @RequestHeader(value = "api-key") String apiKey) {
         CompletableFuture.runAsync(() ->
                 service.delete(id), ForkJoinPool.commonPool()
-                );
+        );
     }
 }

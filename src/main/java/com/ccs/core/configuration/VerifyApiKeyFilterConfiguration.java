@@ -16,7 +16,7 @@ public class VerifyApiKeyFilterConfiguration {
     public FilterRegistrationBean<VerifyApiKeyFilter> verifyApiKeyFilter(){
         var filterFilterRegistrationBean = new FilterRegistrationBean<VerifyApiKeyFilter>();
         filterFilterRegistrationBean.setFilter(new VerifyApiKeyFilter(repository));
-        filterFilterRegistrationBean.addUrlPatterns("/api/v1/*");
+        filterFilterRegistrationBean.addUrlPatterns("/api/v1/*", "/api/v2/*");
         return filterFilterRegistrationBean;
     }
 }

@@ -1,4 +1,4 @@
-package com.ccs.api.v1.controller;
+package com.ccs.api.authentication;
 
 import com.ccs.api.v1.model.input.LoginInput;
 import com.ccs.domain.model.UsuarioAutenticado;
