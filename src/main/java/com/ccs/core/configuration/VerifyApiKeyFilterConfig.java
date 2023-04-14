@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-public class VerifyApiKeyFilterConfiguration {
+public class VerifyApiKeyFilterConfig {
     private final TokenRepository repository;
 
     @Bean

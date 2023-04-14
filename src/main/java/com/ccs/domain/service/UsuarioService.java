@@ -37,11 +37,7 @@ public class UsuarioService {
     public Usuario save(Usuario usuario) {
         try {
             usuario = repository.save(usuario);
-
-            tokenService.gerarToken(usuario);
-
             return usuario;
-
         } catch (IllegalArgumentException e) {
             throw new ApiServiceException(ERRO_SALVAR, e);
         } catch (DataIntegrityViolationException e) {
@@ -51,10 +47,10 @@ public class UsuarioService {
 
     public UsuarioAutenticado autenticar(String login, String senha) {
         var usuario = this.findBylogin(login);
-        var token = tokenService.findByLogin(login);
 
         if (this.valiadarSenha(usuario, senha)) {
-            tokenService.calcularExpiracao(token);
+            var token = tokenService.gerarToken(usuario);
+//            tokenService.calcularExpiracao(token);
             return this.buildUsuarioAutenticado(usuario, token);
         } else {
             throw new ApiAutenticationException(LOGIN_SENHA_INVALIDO);

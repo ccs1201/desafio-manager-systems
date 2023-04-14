@@ -15,15 +15,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TokenService {
 
-    private static final String TOKEN_INVALIDO = "Token invalido.";
+    private static final String TOKEN_INVALIDO = "Token inválido.";
     private final TokenRepository repository;
     private final TokenDurationProperties tokenDurationProperties;
 
     public Boolean renovarTicket(String token) {
         var tokenEntity = repository.findByToken(token);
 
-        if(tokenEntity.isPresent()){
-            if(tokenEntity.get().getAdministrador()){
+        if (tokenEntity.isPresent()) {
+            if (tokenEntity.get().getAdministrador()) {
                 this.calcularExpiracao(tokenEntity.get());
                 repository.save(tokenEntity.get());
                 return true;
@@ -32,23 +32,18 @@ public class TokenService {
         return false;
     }
 
-    public void save(Token token) {
-        repository.save(token);
+    public Token save(Token token) {
+        return repository.save(token);
     }
 
-    public void gerarToken(Usuario usuario) {
+    public Token gerarToken(Usuario usuario) {
         var token = Token.builder()
                 .token(UUID.randomUUID().toString())
                 .administrador(usuario.getAdministrador())
                 .login(usuario.getLogin())
                 .build();
         this.calcularExpiracao(token);
-        this.save(token);
-    }
-
-    public Token findByLogin(String login) {
-        return repository.findByLogin(login).orElseThrow();
-
+        return this.save(token);
     }
 
     public Token findByApiKey(String apiKey) {
@@ -56,7 +51,7 @@ public class TokenService {
                 .orElseThrow(() -> new ApiAutenticationException(TOKEN_INVALIDO));
     }
 
-    public void calcularExpiracao(Token token) {
+    private void calcularExpiracao(Token token) {
         token.setExpiracao(LocalDateTime.now().plusMinutes(tokenDurationProperties.getToken_duration()));
     }
 }

@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ForkJoinPool;
 
+import static java.util.concurrent.CompletableFuture.runAsync;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 /**
@@ -95,11 +96,11 @@ public class PaisControllerV2 {
             @Parameter(name = "id", description = "ID do País que será removido"),
             @Parameter(name = "api-key", description = "Token de autenticação")
     })
-    public void delete(@PathVariable Long id, @RequestHeader(value = "api-key") String apiKey) {
-        CompletableFuture.runAsync(() -> {
-                    acessoUtils.validarPapelAdministrador(apiKey);
-                    service.delete(id);
-                }, ForkJoinPool.commonPool()
-        );
+    public CompletableFuture<Void> delete(@PathVariable Long id, @RequestHeader(value = "api-key") String apiKey) {
+        return runAsync(() -> {
+            acessoUtils.validarPapelAdministrador(apiKey);
+            service.delete(id);
+
+        }, ForkJoinPool.commonPool());
     }
 }

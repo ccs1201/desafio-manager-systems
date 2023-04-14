@@ -19,7 +19,7 @@ public class Token {
     private Long id;
     @Column(nullable = false, unique = true)
     private String token;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String login;
     @Column(nullable = false)
     private LocalDateTime expiracao;
