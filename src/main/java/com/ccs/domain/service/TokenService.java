@@ -22,14 +22,14 @@ public class TokenService {
     public Boolean renovarTicket(String token) {
         var tokenEntity = repository.findByToken(token);
 
-        if (tokenEntity.isPresent()) {
-            if (tokenEntity.get().getAdministrador()) {
-                this.calcularExpiracao(tokenEntity.get());
-                repository.save(tokenEntity.get());
-                return true;
-            }
-        }
-        return false;
+        return tokenEntity
+                .stream()
+                .filter(Token::getAdministrador)
+                .peek(this::calcularExpiracao)
+                .peek(repository::save)
+                .toList()
+                .stream().findFirst()
+                .isPresent();
     }
 
     public Token save(Token token) {
