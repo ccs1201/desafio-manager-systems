@@ -20,15 +20,14 @@ public class TokenService {
     private final TokenDurationProperties tokenDurationProperties;
 
     public Boolean renovarTicket(String token) {
-        var tokenEntity = repository.findByToken(token);
-
-        return tokenEntity
-                .stream()
+        return repository.findByToken(token)
                 .filter(Token::getAdministrador)
-                .peek(this::calcularExpiracao)
-                .peek(this::save)
-                .toList()
-                .stream().findFirst()
+                .stream()
+                .peek(t -> {
+                    this.calcularExpiracao(t);
+                    this.save(t);
+                })
+                .findFirst()
                 .isPresent();
     }
 
