@@ -26,7 +26,7 @@ public class TokenService {
                 .stream()
                 .filter(Token::getAdministrador)
                 .peek(this::calcularExpiracao)
-                .peek(repository::save)
+                .peek(this::save)
                 .toList()
                 .stream().findFirst()
                 .isPresent();
