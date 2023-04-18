@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 /**
- * <p><b>Interface de contrato para implementação do Mappers customizados</b></p>
+ * <p><b>Interface de contrato para implementação dos Mappers customizados</b></p>
  *
  * <p>Mappers são nossas classes que transformam Entidades de Dominio de e para {@code RESPONSEMODEL} e
  * {@code INPUTMODEL} do core da API</p>

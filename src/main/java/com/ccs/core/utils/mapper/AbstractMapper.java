@@ -3,7 +3,6 @@ package com.ccs.core.utils.mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.web.PagedResourcesAssembler;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
@@ -21,10 +20,10 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractMapper<OUTPUTMODEL, INPUTMODEL, ENTITY> implements MapperInterface<OUTPUTMODEL, INPUTMODEL, ENTITY> {
 
-    @Autowired
-    protected ModelMapper mapper;
     private final Class<OUTPUTMODEL> responseModelClass;
     private final Class<ENTITY> entityClass;
+    @Autowired
+    protected ModelMapper mapper;
 
     public AbstractMapper() {
         ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
@@ -90,11 +89,11 @@ public abstract class AbstractMapper<OUTPUTMODEL, INPUTMODEL, ENTITY> implements
     }
 
     /**
-     * <p>Transforma um {@link Page <ENTITY>} em um
-     * {@link Page< OUTPUTMODEL >}</p>
+     * <p>Transforma um {@link Page} {@code ENTITY} em um
+     * {@link Page} {@code OUTPUTMODEL}</p>
      *
      * @param page O {@link Page} contendo as entidades de domínio.
-     * @return Um {@link Page< OUTPUTMODEL >} contendo a entidades do domínio transformada em {@code RESPONSEMODEL}
+     * @return Um {@link Page}  OUTPUTMODEL contendo a entidades do domínio transformada em {@code RESPONSEMODEL}
      */
     public Page<OUTPUTMODEL> toPage(Page<ENTITY> page) {
 
@@ -102,7 +101,7 @@ public abstract class AbstractMapper<OUTPUTMODEL, INPUTMODEL, ENTITY> implements
     }
 
     /**
-     * <p>Transforma um {@link Page<ENTITY>} em uma coleção
+     * <p>Transforma um {@link Page} ENTITY em uma coleção
      * de {@code RESPONSEMODEL}</p>
      *
      * @param page Contendo as entidades do domínio.
@@ -119,7 +118,7 @@ public abstract class AbstractMapper<OUTPUTMODEL, INPUTMODEL, ENTITY> implements
      * uma coleção de RESPONSEMODEL</p>
      *
      * @param collection A coleção de Entidades do domínio
-     * @return Collection<RESPONSEMODEL> Contendo as entidades convertidas em RESPONSEMODEL
+     * @return {@link Collection} RESPONSEMODEL Contendo as entidades transformadas em RESPONSEMODEL
      */
     public Collection<OUTPUTMODEL> toCollection(Collection<ENTITY> collection) {
         return collection.stream().map(this::toModel).collect(Collectors.toList());
