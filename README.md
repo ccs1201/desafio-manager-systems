@@ -17,4 +17,4 @@
 * Todos os endpoints são assíncronos, para testes de escalabilidade sugiro o [K6](https://k6.io/) da Grafana Labs.
 * Os ***end points*** de listagem são ***paginados***.
 * Banco de dados H2 em ***memória***, como sugerido no documento do desafio. 
-* Teste ***Unitários*** ou de ***integração*** não foram solicitados no documento do desafio.
+* Testes ***Unitários*** ou de ***integração*** não foram solicitados no documento do desafio.
