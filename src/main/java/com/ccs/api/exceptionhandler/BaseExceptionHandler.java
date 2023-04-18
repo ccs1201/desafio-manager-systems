@@ -100,7 +100,7 @@ public class BaseExceptionHandler extends ResponseEntityExceptionHandler {
 
     /**
      * <p><b>Cria a lista de {@code FieldValidationError} com
-     * cada erro de validação</b></></p>
+     * cada erro de validação</b></p>
      * <p>Cada FieldValidationError possui as informações do <br>
      * atributo que gerou o erro, a mensagem de validação e o valor rejeitado.</p>
      * <br>
@@ -108,7 +108,7 @@ public class BaseExceptionHandler extends ResponseEntityExceptionHandler {
      * <br>
      *
      * @param e                          lista de {@link ObjectError}
-     * @param apiValidationErrorResponse a response que será devolvida ao cliente d API
+     * @param apiValidationErrorResponse a response que será devolvida ao cliente da API
      */
     private void getFieldErrors(List<ObjectError> e, ApiValidationErrorResponse apiValidationErrorResponse) {
 

@@ -167,7 +167,11 @@ public class ApiExceptionHandler extends BaseExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleExceptionInternal(@NotNull Exception ex, @Nullable Object body, @NotNull HttpHeaders headers, @NotNull HttpStatus status, @NotNull WebRequest request) {
+    protected ResponseEntity<Object> handleExceptionInternal(@NotNull Exception ex,
+                                                             @Nullable Object body,
+                                                             @NotNull HttpHeaders headers,
+                                                             @NotNull HttpStatus status,
+                                                             @NotNull WebRequest request) {
 
         if (body == null) {
             return buildResponseEntity(status, ex, INVALID_FIELD_VALUES);
