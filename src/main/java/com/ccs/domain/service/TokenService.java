@@ -6,12 +6,12 @@ import com.ccs.core.repository.TokenRepository;
 import com.ccs.domain.entity.Token;
 import com.ccs.domain.entity.Usuario;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class TokenService {
 
